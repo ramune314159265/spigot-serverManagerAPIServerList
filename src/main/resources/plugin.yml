@@ -1,0 +1,7 @@
+name: serverListSMapi
+version: '${version}'
+main: ramune314159265.spigotserverlistsmapi.ServerListSMapi
+api-version: '1.18'
+load: STARTUP
+authors: [ramune314159265]
+description: Display the list of servers in the Chest GUI from the serverManager API
