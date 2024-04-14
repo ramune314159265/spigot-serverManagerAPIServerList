@@ -57,9 +57,11 @@ public class ServerListGui implements Listener {
 
 	public void init(Player player) {
 		HashMap<String, ServerData> servers = ServerList.get();
-		servers.forEach((k, v) -> Bukkit.getLogger().info(k + v.name));
 		ServerData proxy = servers.get(ServerListSMapi.proxyId);
-		Bukkit.getLogger().info(ServerList.servers.toString());
+		if(Objects.isNull(proxy)){
+			player.sendMessage("§c取得できませんでした");
+			return;
+		}
 		int index = 0;
 		for (String id : proxy.childIds) {
 			ServerData server = ServerList.servers.get(id);
