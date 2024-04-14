@@ -8,4 +8,6 @@ public class ServerData {
 	public String minecraftItemIcon;
 	public String type;
 	public String description;
+
+	public String status;
 }
