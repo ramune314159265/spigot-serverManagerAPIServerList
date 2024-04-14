@@ -12,9 +12,6 @@ public final class ServerListSMapi extends JavaPlugin {
 	static public String proxyId;
 	static public HashMap<UUID, Inventory> playerInvMap;
 	private static ServerListSMapi instance;
-	public static ServerListSMapi getInstance() {
-		return instance;
-	}
 
 	public ServerListSMapi() {
 		proxyId = "proxy";
@@ -22,9 +19,13 @@ public final class ServerListSMapi extends JavaPlugin {
 		ServerListSMapi.playerInvMap = new HashMap<>();
 	}
 
+	public static ServerListSMapi getInstance() {
+		return instance;
+	}
+
 	@Override
 	public void onEnable() {
-		getServer().getMessenger().registerOutgoingPluginChannel(this,"BungeeCord");
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		getServer().getPluginManager().registerEvents(new ServerListGui(), this);
 		this.getCommand("serverlist").setExecutor(new ServerListExecutor());
 	}

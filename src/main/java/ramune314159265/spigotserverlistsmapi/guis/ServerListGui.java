@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class ServerListGui implements Listener {
+	public static HashMap<Inventory, HashMap<Integer, String>> slotMap;
 	private final Inventory inventory;
 	private final Integer size;
-	private final HashMap<Integer, String> slotMap;
 
 	public ServerListGui() {
 		this.size = 9;
@@ -50,15 +50,15 @@ public class ServerListGui implements Listener {
 		};
 	}
 
-	static public boolean getIsConnected(ServerData server, Player player){
+	static public boolean getIsConnected(ServerData server, Player player) {
 		List<String> serverPlayers = Arrays.asList(server.players);
-		return  serverPlayers.contains(player.getName());
+		return serverPlayers.contains(player.getName());
 	}
 
 	public void init(Player player) {
 		HashMap<String, ServerData> servers = ServerList.get();
 		ServerData proxy = servers.get(ServerListSMapi.proxyId);
-		if(Objects.isNull(proxy)){
+		if (Objects.isNull(proxy)) {
 			player.sendMessage("§c取得できませんでした");
 			return;
 		}
@@ -75,12 +75,14 @@ public class ServerListGui implements Listener {
 					"§r§f状態: " + ServerListGui.getStatusColor(server.status) + ServerListGui.getStatusMessage(server.status),
 					"§r§f人数: " + server.players.length + "人",
 					"",
-					ServerListGui.getIsConnected(server,player) ? "§r§c§l既に接続されています" : "§r§f" + server.description
+					ServerListGui.getIsConnected(server, player) ? "§r§c§l既に接続されています" : "§r§f" + server.description
 			));
 			item.setItemMeta(meta);
 
 			this.inventory.addItem(item);
-			slotMap.put(index++, id);
+			HashMap<Integer, String> slot = new HashMap<>();
+			slot.put(index++, id);
+			ServerListGui.slotMap.put(this.inventory, slot);
 		}
 		ItemStack closeItem = new ItemStack(Material.BARRIER, 1);
 		ItemMeta meta = closeItem.getItemMeta();
@@ -110,7 +112,7 @@ public class ServerListGui implements Listener {
 			return;
 		}
 
-		String clickedServerId = slotMap.get(clickedSlot);
+		String clickedServerId = ServerListGui.slotMap.get(e.getInventory()).get(clickedSlot);
 		if (Objects.isNull(clickedServerId)) {
 			return;
 		}

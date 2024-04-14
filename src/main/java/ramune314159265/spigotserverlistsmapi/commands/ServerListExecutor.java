@@ -13,8 +13,7 @@ public class ServerListExecutor implements CommandExecutor {
 			sender.sendMessage("This command can only be executed by the player");
 			return false;
 		}
-		ServerListGui gui = new ServerListGui();
-		gui.open((Player) sender);
+		new ServerListGui().open((Player) sender);
 		return true;
 	}
 }
