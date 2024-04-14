@@ -5,3 +5,17 @@ api-version: '1.18'
 load: STARTUP
 authors: [ramune314159265]
 description: Display the list of servers in the Chest GUI from the serverManager API
+commands:
+  serverlist:
+    aliases: [ svl ]
+    description: Open Server List
+    permission: serverlist.command.serverlist
+
+permissions:
+  serverlist.command.*:
+    description: Allows you to perform commands in this plugin.
+    children:
+      serverlist.command.serverlist: true
+  serverlist.command.serverlist:
+    description: Allows you to perform /serverlist command.
+    default: op
