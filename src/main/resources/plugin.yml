@@ -10,6 +10,10 @@ commands:
     aliases: [ svl ]
     description: Open Server List
     permission: serverlist.command.serverlist
+  serveropenlist:
+    aliases: [ svol ]
+    description: Open Server Startup List
+    permission: serverlist.command.serveropenlist
 
 permissions:
   serverlist.command.*:
@@ -18,4 +22,7 @@ permissions:
       serverlist.command.serverlist: true
   serverlist.command.serverlist:
     description: Allows you to perform /serverlist command.
-    default: op
+    default: true
+  serverlist.command.serveropenlist:
+    description: Allows you to perform /serveropenlist command.
+    default: true

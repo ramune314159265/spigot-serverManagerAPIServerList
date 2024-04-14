@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class ServerList {
+public class SMServers {
 	public static HashMap<String, ServerData> servers;
 
 	public static HashMap<String, ServerData> get() {
@@ -28,8 +28,26 @@ public class ServerList {
 			HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
 			Gson gson = new Gson();
 			ServerData[] serverList = gson.fromJson(res.body(), ServerData[].class);
-			Arrays.stream(serverList).toList().forEach(server -> ServerList.servers.put(server.id, server));
+			Arrays.stream(serverList).toList().forEach(server -> SMServers.servers.put(server.id, server));
 			return servers;
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static HttpResponse<String> open(String id){
+		String hostName = "http://localhost:9000";
+		String url = hostName + "/api/v1/servers/" + id + "/start/";
+		try {
+			HttpClient client = HttpClient.newBuilder()
+					.version(HttpClient.Version.HTTP_1_1)
+					.build();
+			HttpRequest req = HttpRequest.newBuilder()
+					.uri(URI.create(url))
+					.header("Accept", "application/json")
+					.build();
+			return client.send(req, HttpResponse.BodyHandlers.ofString());
 		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
 		}

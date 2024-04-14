@@ -16,26 +16,26 @@ import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.SMServers;
 import ramune314159265.spigotserverlistsmapi.ServerListSMapi;
 
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class ServerListGui implements Listener {
+public class ServerOpenListGui implements Listener {
 	public static HashMap<Inventory, HashMap<Integer, String>> slotMap;
 	private final Inventory inventory;
 	private final Integer size;
 
-	public ServerListGui() {
+	public ServerOpenListGui() {
 		this.size = 9;
 		this.slotMap = new HashMap<>();
-		this.inventory = Bukkit.createInventory(null, this.size, "§2§l移動するサーバーを選択");
+		this.inventory = Bukkit.createInventory(null, this.size, "§c§l起動するサーバーを選択");
 	}
-
 	static public String getStatusColor(String status) {
 		return switch (status) {
-			case "online" -> "§a";
-			case "booting" -> "§6";
+			case "online" -> "§8";
+			case "booting" -> "§8";
 			case "offline" -> "§c";
 			default -> "";
 		};
@@ -70,13 +70,13 @@ public class ServerListGui implements Listener {
 			ItemStack item = new ItemStack(material, Math.max(1, server.players.length));
 			ItemMeta meta = item.getItemMeta();
 
-			meta.setDisplayName(ServerListGui.getStatusColor(server.status) + Objects.requireNonNullElse(server.name, "不明"));
+			meta.setDisplayName(ServerOpenListGui.getStatusColor(server.status) + Objects.requireNonNullElse(server.name, "不明"));
 			meta.setLore(Arrays.asList(
 					"§r§7ID  : " + "§o" + server.id,
-					"§r§f状態: " + ServerListGui.getStatusColor(server.status) + ServerListGui.getStatusMessage(server.status),
+					"§r§f状態: " + ServerOpenListGui.getStatusColor(server.status) + ServerOpenListGui.getStatusMessage(server.status),
 					"§r§f人数: " + server.players.length + "人",
 					"",
-					ServerListGui.getIsConnected(server, player) ? "§r§c§l既に接続されています" : "§r§f" + server.description
+					server.status.equals("offline") ? "§r§f" + server.description : "§r§c§l既に起動しています"
 			));
 			item.setItemMeta(meta);
 
@@ -91,7 +91,7 @@ public class ServerListGui implements Listener {
 
 		this.inventory.setItem(this.size - 1, closeItem);
 
-		ServerListGui.slotMap.put(this.inventory, slot);
+		ServerOpenListGui.slotMap.put(this.inventory, slot);
 	}
 
 	public void open(Player player) {
@@ -113,18 +113,20 @@ public class ServerListGui implements Listener {
 			return;
 		}
 
-		String clickedServerId = ServerListGui.slotMap.get(e.getInventory()).get(clickedSlot);
+		String clickedServerId = ServerOpenListGui.slotMap.get(e.getInventory()).get(clickedSlot);
 		if (Objects.isNull(clickedServerId)) {
 			return;
 		}
-		HashMap<String, ServerData> servers = SMServers.get();
-		e.getWhoClicked().sendMessage(servers.get(clickedServerId).name + "に接続中です...");
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeUTF("Connect");
-		out.writeUTF(clickedServerId);
 
-		((Player) e.getWhoClicked()).sendPluginMessage(ServerListSMapi.getInstance(), "BungeeCord", out.toByteArray());
 		e.getWhoClicked().getOpenInventory().close();
+
+		HashMap<String, ServerData> servers = SMServers.get();
+		e.getWhoClicked().sendMessage(servers.get(clickedServerId).name + "を起動中...");
+
+		HttpResponse<String> openResult = SMServers.open(clickedServerId);
+		if(openResult.statusCode() != 200){
+			e.getWhoClicked().sendMessage("§c" + servers.get(clickedServerId).name + "を起動をできませんでした ステータスコード:" + openResult.statusCode());
+		}
 	}
 
 	@EventHandler
