@@ -36,7 +36,7 @@ public class ServerListGui implements WebSocket.Listener {
 			ItemMeta meta = item.getItemMeta();
 
 			meta.setDisplayName("&a" + Objects.requireNonNullElse(server.name,"不明"));
-			meta.setLore(Arrays.asList("ID: " + server.id, "d"));
+			meta.setLore(Arrays.asList("ID: " + server.id, server.description));
 			item.setItemMeta(meta);
 
 			this.inventory.addItem(item);

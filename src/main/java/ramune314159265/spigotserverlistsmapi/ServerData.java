@@ -7,4 +7,5 @@ public class ServerData {
 	public String[] childIds;
 	public String minecraftItemIcon;
 	public String type;
+	public String description;
 }
