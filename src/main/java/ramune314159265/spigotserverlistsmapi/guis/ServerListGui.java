@@ -117,6 +117,8 @@ public class ServerListGui implements Listener {
 		if (Objects.isNull(clickedServerId)) {
 			return;
 		}
+		HashMap<String, ServerData> servers = ServerList.get();
+		e.getWhoClicked().sendMessage(servers.get(clickedServerId).name + "に接続中です...");
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("Connect");
 		out.writeUTF(clickedServerId);
