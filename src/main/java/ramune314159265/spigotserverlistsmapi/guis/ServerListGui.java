@@ -29,7 +29,7 @@ public class ServerListGui implements Listener {
 	public ServerListGui() {
 		this.size = 9;
 		this.slotMap = new HashMap<>();
-		this.inventory = Bukkit.createInventory(null, this.size, "§a移動するサーバーを選択");
+		this.inventory = Bukkit.createInventory(null, this.size, "§2§l移動するサーバーを選択");
 	}
 
 	static public String getStatusColor(String status) {
@@ -112,9 +112,6 @@ public class ServerListGui implements Listener {
 
 		String clickedServerId = slotMap.get(clickedSlot);
 		if (Objects.isNull(clickedServerId)) {
-			return;
-		}
-		if(!(e.getWhoClicked() instanceof Player)){
 			return;
 		}
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
