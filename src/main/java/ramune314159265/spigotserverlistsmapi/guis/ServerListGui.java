@@ -27,7 +27,7 @@ public class ServerListGui implements Listener {
 	private final Integer size;
 
 	public ServerListGui() {
-		this.size = 9;
+		this.size = 18;
 		this.slotMap = new HashMap<>();
 		this.inventory = Bukkit.createInventory(null, this.size, "§2§l移動するサーバーを選択");
 	}
