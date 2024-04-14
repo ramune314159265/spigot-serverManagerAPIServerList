@@ -56,6 +56,7 @@ public class ServerListGui implements Listener {
 	}
 
 	public void init(Player player) {
+		HashMap<Integer, String> slot = new HashMap<>();
 		HashMap<String, ServerData> servers = ServerList.get();
 		ServerData proxy = servers.get(ServerListSMapi.proxyId);
 		if (Objects.isNull(proxy)) {
@@ -80,9 +81,7 @@ public class ServerListGui implements Listener {
 			item.setItemMeta(meta);
 
 			this.inventory.addItem(item);
-			HashMap<Integer, String> slot = new HashMap<>();
 			slot.put(index++, id);
-			ServerListGui.slotMap.put(this.inventory, slot);
 		}
 		ItemStack closeItem = new ItemStack(Material.BARRIER, 1);
 		ItemMeta meta = closeItem.getItemMeta();
@@ -91,6 +90,8 @@ public class ServerListGui implements Listener {
 		closeItem.setItemMeta(meta);
 
 		this.inventory.setItem(this.size - 1, closeItem);
+
+		ServerListGui.slotMap.put(this.inventory, slot);
 	}
 
 	public void open(Player player) {
