@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 group = 'ramune314159265'
@@ -19,6 +20,7 @@ repositories {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT"
+    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
 }
 
 def targetJavaVersion = 17
@@ -45,3 +47,10 @@ processResources {
         expand props
     }
 }
+
+shadowJar {
+    zip64 true
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'

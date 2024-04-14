@@ -15,7 +15,7 @@ public class SMServers {
 
 	public static HashMap<String, ServerData> get() {
 		servers = new HashMap<>();
-		String hostName = "http://localhost:9000";
+		String hostName = ServerListSMapi.apiHostname;
 		String url = hostName + "/api/v1/servers/";
 		try {
 			HttpClient client = HttpClient.newBuilder()
@@ -37,7 +37,7 @@ public class SMServers {
 	}
 
 	public static HttpResponse<String> open(String id){
-		String hostName = "http://localhost:9000";
+		String hostName = ServerListSMapi.apiHostname;
 		String url = hostName + "/api/v1/servers/" + id + "/start/";
 		try {
 			HttpClient client = HttpClient.newBuilder()
