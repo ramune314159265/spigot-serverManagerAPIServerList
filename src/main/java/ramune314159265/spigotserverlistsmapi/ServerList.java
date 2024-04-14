@@ -1,7 +1,6 @@
 package ramune314159265.spigotserverlistsmapi;
 
 import com.google.gson.Gson;
-import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.net.URI;

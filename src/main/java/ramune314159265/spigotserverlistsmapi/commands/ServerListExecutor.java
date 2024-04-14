@@ -9,7 +9,7 @@ import ramune314159265.spigotserverlistsmapi.guis.ServerListGui;
 public class ServerListExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(!(sender instanceof Player)){
+		if (!(sender instanceof Player)) {
 			sender.sendMessage("This command can only be executed by the player");
 			return false;
 		}
