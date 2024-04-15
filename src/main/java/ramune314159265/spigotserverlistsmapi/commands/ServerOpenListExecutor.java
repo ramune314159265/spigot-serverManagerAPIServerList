@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ramune314159265.spigotserverlistsmapi.guis.ServerListGui;
 import ramune314159265.spigotserverlistsmapi.guis.ServerOpenListGui;
 
 public class ServerOpenListExecutor implements CommandExecutor {

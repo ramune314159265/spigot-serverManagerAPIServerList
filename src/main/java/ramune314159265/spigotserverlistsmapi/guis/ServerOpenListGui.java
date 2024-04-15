@@ -1,7 +1,5 @@
 package ramune314159265.spigotserverlistsmapi.guis;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,8 +10,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.SMServers;
+import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.ServerListSMapi;
 
 import java.net.http.HttpResponse;
@@ -24,18 +22,16 @@ import java.util.Objects;
 
 public class ServerOpenListGui implements Listener {
 	public static HashMap<Inventory, HashMap<Integer, String>> slotMap;
-	private final Inventory inventory;
-	private final Integer size;
 
-	public ServerOpenListGui() {
-		this.size = 9;
-		this.slotMap = new HashMap<>();
-		this.inventory = Bukkit.createInventory(null, this.size, "§c§l起動するサーバーを選択");
+	static {
+		slotMap = new HashMap<>();
 	}
+
+	private Inventory inventory;
+
 	static public String getStatusColor(String status) {
 		return switch (status) {
-			case "online" -> "§8";
-			case "booting" -> "§8";
+			case "online", "booting" -> "§8";
 			case "offline" -> "§c";
 			default -> "";
 		};
@@ -63,6 +59,10 @@ public class ServerOpenListGui implements Listener {
 			player.sendMessage("§c取得できませんでした");
 			return;
 		}
+
+		int size = ((int) Math.ceil((float) proxy.childIds.length / 9)) * 9;
+		this.inventory = Bukkit.createInventory(null, size, "§c§l起動するサーバーを選択");
+
 		int index = 0;
 		for (String id : proxy.childIds) {
 			ServerData server = SMServers.servers.get(id);
@@ -89,7 +89,7 @@ public class ServerOpenListGui implements Listener {
 		meta.setDisplayName("§r§f" + "閉じる");
 		closeItem.setItemMeta(meta);
 
-		this.inventory.setItem(this.size - 1, closeItem);
+		this.inventory.setItem(size - 1, closeItem);
 
 		ServerOpenListGui.slotMap.put(this.inventory, slot);
 	}
@@ -108,7 +108,7 @@ public class ServerOpenListGui implements Listener {
 		}
 		e.setCancelled(true);
 		int clickedSlot = e.getRawSlot();
-		if (clickedSlot == this.size - 1) {
+		if (clickedSlot == e.getInventory().getSize() - 1) {
 			e.getWhoClicked().getOpenInventory().close();
 			return;
 		}
@@ -124,7 +124,7 @@ public class ServerOpenListGui implements Listener {
 		e.getWhoClicked().sendMessage(servers.get(clickedServerId).name + "を起動中...");
 
 		HttpResponse<String> openResult = SMServers.open(clickedServerId);
-		if(openResult.statusCode() != 200){
+		if (openResult.statusCode() != 200) {
 			e.getWhoClicked().sendMessage("§c" + servers.get(clickedServerId).name + "を起動をできませんでした ステータスコード:" + openResult.statusCode());
 		}
 	}

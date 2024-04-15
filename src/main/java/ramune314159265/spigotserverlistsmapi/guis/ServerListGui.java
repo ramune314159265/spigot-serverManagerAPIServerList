@@ -12,8 +12,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.SMServers;
+import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.ServerListSMapi;
 
 import java.util.Arrays;
@@ -23,14 +23,12 @@ import java.util.Objects;
 
 public class ServerListGui implements Listener {
 	public static HashMap<Inventory, HashMap<Integer, String>> slotMap;
-	private final Inventory inventory;
-	private final Integer size;
 
-	public ServerListGui() {
-		this.size = 18;
-		this.slotMap = new HashMap<>();
-		this.inventory = Bukkit.createInventory(null, this.size, "§2§l移動するサーバーを選択");
+	static {
+		slotMap = new HashMap<>();
 	}
+
+	private Inventory inventory;
 
 	static public String getStatusColor(String status) {
 		return switch (status) {
@@ -63,6 +61,10 @@ public class ServerListGui implements Listener {
 			player.sendMessage("§c取得できませんでした");
 			return;
 		}
+
+		int size = ((int) Math.ceil((float) proxy.childIds.length / 9)) * 9;
+		this.inventory = Bukkit.createInventory(null, size, "§2§l移動するサーバーを選択");
+
 		int index = 0;
 		for (String id : proxy.childIds) {
 			ServerData server = SMServers.servers.get(id);
@@ -89,7 +91,7 @@ public class ServerListGui implements Listener {
 		meta.setDisplayName("§r§f" + "閉じる");
 		closeItem.setItemMeta(meta);
 
-		this.inventory.setItem(this.size - 1, closeItem);
+		this.inventory.setItem(size - 1, closeItem);
 
 		ServerListGui.slotMap.put(this.inventory, slot);
 	}
@@ -108,7 +110,7 @@ public class ServerListGui implements Listener {
 		}
 		e.setCancelled(true);
 		int clickedSlot = e.getRawSlot();
-		if (clickedSlot == this.size - 1) {
+		if (clickedSlot == e.getInventory().getSize() - 1) {
 			e.getWhoClicked().getOpenInventory().close();
 			return;
 		}

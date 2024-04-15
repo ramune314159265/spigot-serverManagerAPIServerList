@@ -36,7 +36,7 @@ public class SMServers {
 		return null;
 	}
 
-	public static HttpResponse<String> open(String id){
+	public static HttpResponse<String> open(String id) {
 		String hostName = ServerListSMapi.apiHostname;
 		String url = hostName + "/api/v1/servers/" + id + "/start/";
 		try {
