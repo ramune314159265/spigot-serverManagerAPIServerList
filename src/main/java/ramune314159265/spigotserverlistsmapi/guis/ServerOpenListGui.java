@@ -15,10 +15,7 @@ import ramune314159265.spigotserverlistsmapi.ServerData;
 import ramune314159265.spigotserverlistsmapi.ServerListSMapi;
 
 import java.net.http.HttpResponse;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ServerOpenListGui implements Listener {
 	public static HashMap<Inventory, HashMap<Integer, String>> slotMap;
@@ -54,11 +51,11 @@ public class ServerOpenListGui implements Listener {
 	public void init(Player player) {
 		HashMap<Integer, String> slot = new HashMap<>();
 		HashMap<String, ServerData> servers = SMServers.get();
-		ServerData proxy = servers.get(ServerListSMapi.proxyId);
-		if (Objects.isNull(proxy)) {
+		if (Objects.isNull(servers)) {
 			player.sendMessage("§c取得できませんでした");
 			return;
 		}
+		ServerData proxy = servers.get(ServerListSMapi.proxyId);
 
 		int size = ((int) Math.ceil((float) proxy.childIds.length / 9)) * 9;
 		this.inventory = Bukkit.createInventory(null, size, "§c§l起動するサーバーを選択");
@@ -66,18 +63,19 @@ public class ServerOpenListGui implements Listener {
 		int index = 0;
 		for (String id : proxy.childIds) {
 			ServerData server = SMServers.servers.get(id);
-			Material material = Objects.requireNonNullElse(Material.matchMaterial(server.minecraftItemIcon), Material.STONE);
+			Material material = Objects.requireNonNullElse(Material.matchMaterial(server.icon.minecraftItemId), Material.STONE);
 			ItemStack item = new ItemStack(material, Math.max(1, server.players.length));
 			ItemMeta meta = item.getItemMeta();
 
 			meta.setDisplayName(ServerOpenListGui.getStatusColor(server.status) + Objects.requireNonNullElse(server.name, "不明"));
-			meta.setLore(Arrays.asList(
+			List<String> lore = new LinkedList<>(Arrays.asList(
 					"§r§7ID  : " + "§o" + server.id,
 					"§r§f状態: " + ServerOpenListGui.getStatusColor(server.status) + ServerOpenListGui.getStatusMessage(server.status),
 					"§r§f人数: " + server.players.length + "人",
-					"",
-					server.status.equals("offline") ? "§r§f" + server.description : "§r§c§l既に起動しています"
+					server.status.equals("offline") ? "" : "§r§c§l既に起動しています"
 			));
+			lore.addAll(server.description.stream().map(s -> "§r§f" + s).toList());
+			meta.setLore(lore);
 			item.setItemMeta(meta);
 
 			this.inventory.addItem(item);
