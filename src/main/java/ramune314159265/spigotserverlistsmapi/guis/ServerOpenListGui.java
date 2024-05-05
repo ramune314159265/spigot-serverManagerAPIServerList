@@ -106,15 +106,21 @@ public class ServerOpenListGui implements Listener {
 		}
 		e.setCancelled(true);
 		int clickedSlot = e.getRawSlot();
+		if (!(0 <= clickedSlot && clickedSlot <= e.getInventory().getSize() - 1)) {
+			return;
+		}
 		if (clickedSlot == e.getInventory().getSize() - 1) {
 			e.getWhoClicked().getOpenInventory().close();
 			return;
 		}
 
-		String clickedServerId = ServerOpenListGui.slotMap.get(e.getInventory()).get(clickedSlot);
-		if (Objects.isNull(clickedServerId)) {
+		if (!ServerOpenListGui.slotMap.containsKey(e.getInventory())) {
 			return;
 		}
+		if (!ServerOpenListGui.slotMap.get(e.getInventory()).containsKey(clickedSlot)) {
+			return;
+		}
+		String clickedServerId = ServerOpenListGui.slotMap.get(e.getInventory()).get(clickedSlot);
 
 		e.getWhoClicked().getOpenInventory().close();
 

@@ -108,15 +108,22 @@ public class ServerListGui implements Listener {
 		}
 		e.setCancelled(true);
 		int clickedSlot = e.getRawSlot();
+		if (!(0 <= clickedSlot && clickedSlot <= e.getInventory().getSize() - 1)) {
+			return;
+		}
 		if (clickedSlot == e.getInventory().getSize() - 1) {
 			e.getWhoClicked().getOpenInventory().close();
 			return;
 		}
 
-		String clickedServerId = ServerListGui.slotMap.get(e.getInventory()).get(clickedSlot);
-		if (Objects.isNull(clickedServerId)) {
+		if (!ServerListGui.slotMap.containsKey(e.getInventory())) {
 			return;
 		}
+		if (!ServerListGui.slotMap.get(e.getInventory()).containsKey(clickedSlot)) {
+			return;
+		}
+		String clickedServerId = ServerListGui.slotMap.get(e.getInventory()).get(clickedSlot);
+
 		HashMap<String, ServerData> servers = SMServers.get();
 		e.getWhoClicked().sendMessage(servers.get(clickedServerId).name + "に接続中です...");
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
