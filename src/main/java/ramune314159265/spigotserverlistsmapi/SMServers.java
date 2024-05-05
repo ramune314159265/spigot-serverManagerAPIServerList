@@ -16,7 +16,7 @@ public class SMServers {
 	public static HashMap<String, ServerData> get() {
 		servers = new HashMap<>();
 		String hostName = ServerListSMapi.apiHostname;
-		String url = hostName + "/api/v1/servers/";
+		String url = hostName + "/api/v2/servers/";
 		try {
 			HttpClient client = HttpClient.newBuilder()
 					.version(HttpClient.Version.HTTP_1_1)
